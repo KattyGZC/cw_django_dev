@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load date_filters %}
+{% load static %}
 {% block content %}
 <h1>Preguntas</h1>
 <div class="d-flex flex-column">
@@ -28,9 +29,9 @@
             <div class="col-4 d-flex flex-column ">
                 <u class="fw-lighter mb-1">Evalúa la pregunta</u>
                 <div>
-                    <a class="mx-1 like {% if question.user_likes %}fas{% else %}fal{% endif %} fa-thumbs-up text-decoration-none"
+                    <a class="mx-1 like vote-like {% if user.is_authenticated and question.user_has_liked %}fas{% else %}fal{% endif %} fa-thumbs-up text-decoration-none"
                         href="#" data-question="{{ question.pk }}" data-value="like"></a>
-                    <a class="mx-1 like {% if question.user_dislikes %}fas{% else %}fal{% endif %} fa-thumbs-up fa-flip-both text-decoration-none"
+                    <a class="mx-1 like vote-dislike {% if user.is_authenticated and question.user_has_disliked %}fas{% else %}fal{% endif %} fa-thumbs-up fa-flip-both text-decoration-none"
                         href="#" data-question="{{ question.pk }}" data-value="dislike"></a>
                 </div>
             </div>
@@ -50,9 +51,6 @@
 {% endblock %}
 
 {% block js %}
-<script>
-
-
-</script>
+<script src="{% static '/js/functions.js' %}"></script>
 
 {% endblock %}
