@@ -10,3 +10,5 @@ db.sqlite3
 /postgresql
 /pgadmin
 /database
+*/migrations/*.py
+!*/migrations/__init__.py
