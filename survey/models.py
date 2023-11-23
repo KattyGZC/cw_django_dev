@@ -9,7 +9,9 @@ class Question(models.Model):
                                on_delete=models.CASCADE)
     title = models.CharField('Título', max_length=200)
     description = models.TextField('Descripción')
-    # TODO: Quisieramos tener un ranking de la pregunta, con likes y dislikes dados por los usuarios.
+    
+    like = models.IntegerField(default=0)
+    dislike = models.IntegerField(default=0)
 
 
     def get_absolute_url(self):
@@ -28,3 +30,10 @@ class Answer(models.Model):
     author = models.ForeignKey(get_user_model(), related_name="answers", verbose_name='Autor', on_delete=models.CASCADE)
     value = models.PositiveIntegerField("Respuesta", default=0)
     comment = models.TextField("Comentario", default="", blank=True)
+
+
+class Vote(models.Model):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    is_like = models.BooleanField()  # True for like, False for dislike
+    created = models.DateTimeField(auto_now_add=True)
