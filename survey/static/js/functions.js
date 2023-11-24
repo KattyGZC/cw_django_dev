@@ -1,64 +1,80 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const likeIcon = document.querySelector('.vote-like');
-    const dislikeIcon = document.querySelector('.vote-dislike');
 
-    likeIcon.addEventListener('click', function () {
-        toggleVoteAndSendRequest(this, dislikeIcon);
-    });
-
-    dislikeIcon.addEventListener('click', function () {
-        toggleVoteAndSendRequest(this, likeIcon);
-    });
-
-    function toggleVoteAndSendRequest(selectedIcon, otherIcon) {
-        let voteValue = selectedIcon.dataset.value;
-        const questionId = selectedIcon.dataset.question;
-
-        if (selectedIcon.classList.contains('fal')) {
-            selectedIcon.classList.remove('fal');
-            selectedIcon.classList.add('fas');
-            otherIcon.classList.remove('fas');
-            otherIcon.classList.add('fal');
-        } else {
-            selectedIcon.classList.remove('fas');
-            selectedIcon.classList.add('fal');
-            voteValue = 'none';
-        }
-
-        sendVoteRequest(questionId, voteValue);
-    }
-
-    function sendVoteRequest(questionId, voteValue) {
-        const url = `/question/${questionId}/vote/${voteValue}/`;
-
+    function sendVoteRequest(url, element) {
         fetch(url, {
             method: 'POST',
             headers: {
                 'X-CSRFToken': getCookie('csrftoken')
             }
         })
-        .then(response => {
-            if (!response.ok) {
-                throw response;
-            }
-            return response.json();
-        })
-        .then(data => {
-            alert("Respuesta: " + data.message);
-        })
-        .catch(response => {
-            response.json().then(data => {
-                alert("Error: " + data.Error); 
-                likeIcon.classList.add('fal');
-                likeIcon.classList.remove('fas');
-                dislikeIcon.classList.add('fal');
-                dislikeIcon.classList.remove('fas');
-            }).catch(error => {
-                console.error('Error al procesar la respuesta:', error);
+            .then(response => {
+                if (!response.ok) {
+                    throw response;
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert("Respuesta: " + data.message);
+            })
+            .catch(response => {
+                response.json().then(data => {
+                    alert("Error: " + data.Error);
+                    element.classList.add('fal');
+                    element.classList.remove('fas');
+                }).catch(error => {
+                    console.error('Error al procesar la respuesta:', error);
 
+                });
             });
-        });
     }
+
+    document.querySelectorAll('.vote').forEach(function (vote) {
+        vote.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', function (e) {
+                e.preventDefault();
+                let voteValue = this.getAttribute('data-value');
+                const questionId = this.getAttribute('data-question');
+                
+                const otherIcon = Array.from(vote.querySelectorAll('a')).find(el => el !== this);
+                this.classList.toggle('fas');
+                this.classList.toggle('fal');
+                otherIcon.classList.add('fal');
+                otherIcon.classList.remove('fas');
+                
+                if (this.classList.contains('fal') && otherIcon.classList.contains('fal')) {
+                    voteValue = 'none'
+                }
+                const url = `/question/${questionId}/vote/${voteValue}/`;
+
+                sendVoteRequest(url, this);
+            })
+
+        })
+
+    })
+
+    document.querySelectorAll('.answers').forEach(function (answer) {
+        answer.addEventListener('click', function (e) {
+
+            if (e.target.tagName === 'A') {
+                e.preventDefault();
+                const questionId = e.target.getAttribute('data-question');
+                const answerValue = e.target.getAttribute('data-value');
+
+                const url = `/question/${questionId}/answer/${answerValue}/`;
+                sendVoteRequest(url, e.target);
+
+                answer.querySelectorAll('a').forEach(a => {
+                    a.classList.remove('fas');
+                    a.classList.add('fal');
+                });
+
+                e.target.classList.add('fas')
+                e.target.classList.remove('fal')
+            }
+        });
+    });
+
 
     function getCookie(name) {
         let cookieValue = null;

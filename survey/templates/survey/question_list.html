@@ -19,7 +19,7 @@
         <div class="d-flex justify-content-between">
             <div class="d-flex flex-column col-4">
                 <u class="fw-lighter mb-1">Respuesta</u>
-                <div>
+                <div class="answers">
                     {% for val in '12345' %}
                     <a class="mx-1 answer {% if question.user_value|slugify == val %}fas{% else %}fal{% endif %} fa-star text-decoration-none"
                         data-question="{{ question.pk }}" data-value="{{ val }}" href="#"></a>
@@ -28,7 +28,7 @@
             </div>
             <div class="col-4 d-flex flex-column ">
                 <u class="fw-lighter mb-1">Evalúa la pregunta</u>
-                <div>
+                <div class="vote">
                     <a class="mx-1 like vote-like {% if user.is_authenticated and question.user_has_liked %}fas{% else %}fal{% endif %} fa-thumbs-up text-decoration-none"
                         href="#" data-question="{{ question.pk }}" data-value="like"></a>
                     <a class="mx-1 like vote-dislike {% if user.is_authenticated and question.user_has_disliked %}fas{% else %}fal{% endif %} fa-thumbs-up fa-flip-both text-decoration-none"
