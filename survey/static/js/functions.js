@@ -49,8 +49,13 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(response => {
             response.json().then(data => {
                 alert("Error: " + data.Error); 
+                likeIcon.classList.add('fal');
+                likeIcon.classList.remove('fas');
+                dislikeIcon.classList.add('fal');
+                dislikeIcon.classList.remove('fas');
             }).catch(error => {
                 console.error('Error al procesar la respuesta:', error);
+
             });
         });
     }
