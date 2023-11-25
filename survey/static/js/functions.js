@@ -61,13 +61,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 const questionId = e.target.getAttribute('data-question');
                 let answerValue = e.target.getAttribute('data-value');
                 answer.querySelectorAll('a').forEach(a => {
-                    if (answerValue == a.getAttribute('data-value') && a.classList.contains('fas')){
+                    if (answerValue == a.getAttribute('data-value') && a.classList.contains('fas')) {
                         answerValue = '0'
                     }
                     a.classList.remove('fas');
                     a.classList.add('fal');
                 });
-                if (answerValue != '0'){
+                if (answerValue != '0') {
                     e.target.classList.add('fas')
                     e.target.classList.remove('fal')
                 }
