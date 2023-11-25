@@ -34,7 +34,9 @@ class Answer(models.Model):
 
 
 class Vote(models.Model):
-    user = models.ForeignKey(get_user_model(), related_name='votes', on_delete=models.CASCADE)
-    question = models.ForeignKey(Question, related_name='votes', on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        get_user_model(), related_name='votes', on_delete=models.CASCADE)
+    question = models.ForeignKey(
+        Question, related_name='votes', on_delete=models.CASCADE)
     is_like = models.BooleanField()  # True for like, False for dislike
     created = models.DateTimeField(auto_now_add=True)

@@ -73,14 +73,14 @@ def answer_question(request, question_pk, value):
     question = Question.objects.get(pk=question_pk)
     if not user.is_authenticated:
         return JsonResponse({'Error': 'Para responder el usuario debe estar autenticado.'}, status=403)
-    
+
     if value in '012345':
         answer, created = Answer.objects.get_or_create(
             question=question, author=user, defaults={'value': value})
         if not created:
             answer.value = value
             answer.save()
-            
+
     return JsonResponse({"message": "Respuesta registrada correctamente."})
 
 
