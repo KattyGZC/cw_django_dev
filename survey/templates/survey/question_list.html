@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load date_filters %}
+{% load survey_filters %}
 {% load static %}
 {% block content %}
 <h1>Preguntas</h1>
@@ -9,7 +9,7 @@
         <div class="d-flex flex-row">
             <div class="col-10">
                 <i class="far fa-question-circle" title="{{ question.description }}"></i>
-                <span class="fw-bold">{{ question.title }} {% if question.created|is_today %}(HOY){% else %}.{% endif %}</span>
+                <span class="fw-bold">{{ question.title }}{% if question.created|is_today %} (HOY){% else %}.{% endif %}</span>
             </div>
             <div class="col-2">
                 <span class="fw-lighter">Autor:</span> {{ question.author }}
@@ -21,7 +21,7 @@
                 <u class="fw-lighter mb-1">Respuesta</u>
                 <div class="answers">
                     {% for val in '12345' %}
-                    <a class="mx-1 answer {% if question.user_value|slugify == val %}fas{% else %}fal{% endif %} fa-star text-decoration-none"
+                    <a class="mx-1 answer {% if question|check_user_answer:request.user == val %}fas{% else %}fal{% endif %} fa-star text-decoration-none"
                         data-question="{{ question.pk }}" data-value="{{ val }}" href="#"></a>
                     {% endfor %}
                 </div>

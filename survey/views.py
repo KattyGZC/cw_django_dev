@@ -74,14 +74,12 @@ def answer_question(request, question_pk, value):
     if not user.is_authenticated:
         return JsonResponse({'Error': 'Para responder el usuario debe estar autenticado.'}, status=403)
     
-    if value in '12345':
+    if value in '012345':
         answer, created = Answer.objects.get_or_create(
             question=question, author=user, defaults={'value': value})
         if not created:
             answer.value = value
             answer.save()
-    elif value == '0':
-        Answer.objects.filter(user=user, question=question).delete()
             
     return JsonResponse({"message": "Respuesta registrada correctamente."})
 

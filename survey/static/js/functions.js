@@ -34,13 +34,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 e.preventDefault();
                 let voteValue = this.getAttribute('data-value');
                 const questionId = this.getAttribute('data-question');
-                
+
                 const otherIcon = Array.from(vote.querySelectorAll('a')).find(el => el !== this);
                 this.classList.toggle('fas');
                 this.classList.toggle('fal');
                 otherIcon.classList.add('fal');
                 otherIcon.classList.remove('fas');
-                
+
                 if (this.classList.contains('fal') && otherIcon.classList.contains('fal')) {
                     voteValue = 'none'
                 }
@@ -59,18 +59,21 @@ document.addEventListener("DOMContentLoaded", function () {
             if (e.target.tagName === 'A') {
                 e.preventDefault();
                 const questionId = e.target.getAttribute('data-question');
-                const answerValue = e.target.getAttribute('data-value');
-
-                const url = `/question/${questionId}/answer/${answerValue}/`;
-                sendVoteRequest(url, e.target);
-
+                let answerValue = e.target.getAttribute('data-value');
                 answer.querySelectorAll('a').forEach(a => {
+                    if (answerValue == a.getAttribute('data-value') && a.classList.contains('fas')){
+                        answerValue = '0'
+                    }
                     a.classList.remove('fas');
                     a.classList.add('fal');
                 });
+                if (answerValue != '0'){
+                    e.target.classList.add('fas')
+                    e.target.classList.remove('fal')
+                }
 
-                e.target.classList.add('fas')
-                e.target.classList.remove('fal')
+                const url = `/question/${questionId}/answer/${answerValue}/`;
+                sendVoteRequest(url, e.target);
             }
         });
     });
