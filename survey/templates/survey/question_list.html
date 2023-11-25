@@ -22,8 +22,9 @@
                 <div class="answers">
                     {% for val in '12345' %}
                     <a class="mx-1 answer {% if question|check_user_answer:request.user == val %}fas{% else %}fal{% endif %} fa-star text-decoration-none"
-                        data-question="{{ question.pk }}" data-value="{{ val }}" href="#"></a>
+                        data-question="{{ question.pk }}" data-value="{{ val }}" href="#"></a> 
                     {% endfor %}
+                    <p class="small">{{question|count_answers}} resp.</p>
                 </div>
             </div>
             <div class="col-4 d-flex flex-column ">
@@ -31,8 +32,14 @@
                 <div class="vote">
                     <a class="mx-1 like vote-like {% if user.is_authenticated and question.user_has_liked %}fas{% else %}fal{% endif %} fa-thumbs-up text-decoration-none"
                         href="#" data-question="{{ question.pk }}" data-value="like"></a>
+                        {% if question|count_likes != 0 %}
+                            {{ question|count_likes }}
+                        {% endif %}
                     <a class="mx-1 like vote-dislike {% if user.is_authenticated and question.user_has_disliked %}fas{% else %}fal{% endif %} fa-thumbs-up fa-flip-both text-decoration-none"
                         href="#" data-question="{{ question.pk }}" data-value="dislike"></a>
+                        {% if question|count_dislikes != 0 %}
+                            {{ question|count_dislikes }}
+                        {% endif %}
                 </div>
             </div>
             <div class="col-2">
