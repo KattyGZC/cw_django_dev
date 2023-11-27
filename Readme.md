@@ -54,3 +54,4 @@ Este es un ejemplo de como queda el listado con su ranking y se ve como respondi
 6. Ejecutar las migraciones `python manage.py migrate`
 7. Crear un nuevo usuario con el comando `python manage.py createsuperuser`
 8. Probar la aplicación `http://localhost:8000/`
+9. Para ejecutar los test unitarios correr el comando `python manage.py test survey`

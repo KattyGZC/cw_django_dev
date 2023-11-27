@@ -13,7 +13,6 @@ from survey.utils import update_vote_counts
 
 class QuestionListView(ListView):
     model = Question
-    paginate_by = 20
 
     def get_queryset(self):
         today = datetime.now(timezone.utc)
