@@ -3,8 +3,7 @@ from django.http import JsonResponse
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
-from django.db import transaction
+from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count, Case, When, IntegerField, F, Sum, Value, Q, ExpressionWrapper
 from django.db.models.functions import Coalesce
 from survey.models import Question, Answer, Vote
@@ -67,40 +66,50 @@ class QuestionUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'survey/question_form.html'
 
 
+@csrf_exempt
 def answer_question(request, question_pk, value):
     user = request.user
     question = Question.objects.get(pk=question_pk)
     if not user.is_authenticated:
         return JsonResponse({'Error': 'Para responder el usuario debe estar autenticado.'}, status=403)
 
-    if value in '012345':
-        answer, created = Answer.objects.get_or_create(
-            question=question, author=user, defaults={'value': value})
-        if not created:
-            answer.value = value
-            answer.save()
+    try:
+        if value in '012345':
+            answer, created = Answer.objects.get_or_create(
+                question=question, author=user, defaults={'value': value})
+            if not created:
+                answer.value = value
+                answer.save()
 
-    return JsonResponse({"message": "Respuesta registrada correctamente."})
+        return JsonResponse({"message": "Respuesta registrada correctamente."})
+
+    except Exception as e:
+        return JsonResponse({'Error': f'{e}'})
 
 
+@csrf_exempt
 def like_dislike_question(request, question_pk, vote_type):
     user = request.user
     question = Question.objects.get(pk=question_pk)
-
+    
     if not user.is_authenticated:
         return JsonResponse({'Error': 'Para votar el usuario debe estar autenticado.'}, status=403)
+    try:
+        if vote_type in ['like', 'dislike']:
+            vote, created = Vote.objects.get_or_create(
+                user=user, question=question,
+                defaults={'is_like': vote_type == 'like'}
+            )
+            if not created:
+                vote.is_like = vote_type == 'like'
+                vote.save()
+        elif vote_type == 'none':
+            Vote.objects.filter(user=user, question=question).delete()
 
-    if vote_type in ['like', 'dislike']:
-        vote, created = Vote.objects.get_or_create(
-            user=user, question=question,
-            defaults={'is_like': vote_type == 'like'}
-        )
-        if not created:
-            vote.is_like = vote_type == 'like'
-            vote.save()
-    elif vote_type == 'none':
-        Vote.objects.filter(user=user, question=question).delete()
+        update_vote_counts(question)
 
-    update_vote_counts(question)
+        return JsonResponse({"message": "Voto registrado correctamente."})
+    except Exception as e:
+        return JsonResponse({'Error': f'{e}'})
 
-    return JsonResponse({"message": "Voto registrado correctamente."})
+

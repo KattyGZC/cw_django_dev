@@ -11,8 +11,6 @@ RUN python3.8 -m pip install -r requirements.txt
 RUN python3.8 -m venv .pyenv && \
     echo "source .pyenv/bin/activate" >> ~/.bashrc
 
-RUN python manage.py collectstatic --noinput
-
 EXPOSE 8030
 
 CMD ["/cw_django_dev/.pyenv/bin/python", "manage.py", "runserver", "0.0.0.0:8030"]
