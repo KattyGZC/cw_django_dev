@@ -9,8 +9,7 @@
         <div class="d-flex flex-row">
             <div class="col-10">
                 <i class="far fa-question-circle" title="{{ question.description }}"></i>
-                <span class="fw-bold">{{ question.title }}{% if question.created|is_today %} (HOY){% else %}.{% endif
-                    %}</span>
+                <span class="fw-bold">{{ question.title }}{% if question.created|is_today %} (HOY){% else %}.{% endif %}</span>
             </div>
             <div class="col-2">
                 <span class="fw-lighter">Autor:</span> {{ question.author }}
