@@ -39,3 +39,18 @@ ranking: `6*10 + 2*5 - 1*3 + 10 = 60 + 10 - 3 +10 = 77`
 Este es un ejemplo de como queda el listado con su ranking y se ve como respondió/votó el usuario actual.
 
 ![Example](example.png)
+
+
+
+## Instrucciones de Uso:
+### Requisitos previos:
+    - Tener docker instalado en el computador
+
+1. Clonar el proyecto.
+2. Abrir una terminal en la carpeta raíz del proyecto.
+3. Correr el comando `docker build -t cw_webapp .`.
+4. Correr el comando `docker -d run --name cw_webapp -p 8000:8030 cw_webapp`
+5. Ingresar en una consola dentro del contenedor con el comando `docker exec -it cw_webapp /bin/bash`
+6. Ejecutar las migraciones `python manage.py migrate`
+7. Crear un nuevo usuario con el comando `python manage.py createsuperuser`
+8. Probar la aplicación `http://localhost:8000/`
